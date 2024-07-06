@@ -31,14 +31,15 @@ class Musync(App):
         ("q", "quit", "Quit"),
     ]
 
-    def __init__(self, library):
+    def __init__(self, local_library, spotify_library):
         super().__init__()
-        self.library = library
+        self.local_library = local_library
+        self.spotify_library = spotify_library
 
     def compose(self) -> ComposeResult:
         with TabbedContent(initial="library"):
             with TabPane("Library (L)", id="library"):
-                yield LibraryTab(self.library)
+                yield LibraryTab(self.local_library)
             with TabPane("Spotify (S)", id="spotify"):
                 yield SpotifyTab()
             with TabPane("Download (D)", id="download"):

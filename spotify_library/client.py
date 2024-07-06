@@ -9,17 +9,26 @@ class SpotifyClient:
         #     client_id=client_id,
         #     client_secret=client_secret,
         # )
+        self.connected = False
         self.auth_manager = SpotifyOAuth(
             client_id=client_id,
             client_secret=client_secret,
             redirect_uri="http://localhost:3000",
             scope="user-library-read"
         )
+
+    def connect(self):
         self.client = spotipy.Spotify(auth_manager=self.auth_manager)
+        self.connected = True
 
     def get_playlists(self):
+        if not self._connected:
+            return None
+
         return self.client.current_user_playlists()
 
     def get_playlist(self, playlist_id):
-        return self.client.playlist(playlist_id)
+        if not self._connected:
+            return None
 
+        return self.client.playlist(playlist_id)

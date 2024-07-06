@@ -1,22 +1,21 @@
 from .client import SpotifyClient
-from dotenv import load_dotenv
-import os
 
 from music.song import Song
 
-load_dotenv()
-
 
 class SpotifyLibrary:
-    SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
-    SPOTIFY_CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
-
-    def __init__(self):
+    def __init__(self, client_id, client_secret):
         self.client = SpotifyClient(
-            client_id=self.SPOTIFY_CLIENT_ID,
-            client_secret=self.SPOTIFY_CLIENT_SECRET
+            client_id=client_id,
+            client_secret=client_secret
         )
         self.playlists_dict = {}
+
+    def connect(self):
+        self.client.connect()
+
+    def is_connected(self):
+        return self.client.connected
 
     def get_playlists(self):
         if self.playlists is None:

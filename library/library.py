@@ -20,7 +20,8 @@ def build_song(file: File):
 class Library:
     def __init__(self, songs_directory: str):
         self.songs_directory = songs_directory
-        self.load_songs()
+        self.raw_songs = []
+        self.songs = []
 
     def load_songs(self):
         all_contents = os.listdir(self.songs_directory)
@@ -31,4 +32,6 @@ class Library:
         self.songs = [build_song(raw_song) for raw_song in self.raw_songs]
 
     def get_songs(self):
+        if not self.songs:
+            self.load_songs()
         return self.songs
