@@ -2,6 +2,8 @@ from .client import SpotifyClient
 from dotenv import load_dotenv
 import os
 
+from music.song import Song
+
 load_dotenv()
 
 
@@ -38,5 +40,20 @@ class SpotifyLibrary:
 
     def get_songs(self, playlist_id):
         playlist = self.get_playlist(playlist_id)
-        return playlist["tracks"]["items"]
+        songs = []
 
+        for song in playlist["tracks"]["items"]:
+            artists = ", ".join([artist["name"]
+                                for artist in song["track"]["artists"]])
+            song_name = song["track"]["name"]
+            album = song["track"]["album"]["name"]
+            duration = int(song["track"]["duration_ms"]) // 1000
+
+            songs.append(Song(
+                title=song_name,
+                artist=artists,
+                album=album,
+                duration=duration
+            ))
+
+        return songs
