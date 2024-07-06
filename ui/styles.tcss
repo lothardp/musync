@@ -1,0 +1,31 @@
+Screen {
+    layout: vertical;
+}
+
+#library-table-header {
+    height: 2;
+}
+
+LibraryTab .title {
+    width: 55%;
+}
+
+LibraryTab .artist {
+    width: 20%;
+}
+
+LibraryTab .duration {
+    width: 10%;
+}
+
+LibraryTab .album {
+    width: 15%;
+}
+
+SongItem Label {
+    padding-right: 1; 
+}
+
+SongItem .duration {
+    text-align: center;
+}
