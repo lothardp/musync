@@ -5,6 +5,15 @@ from textual.binding import Binding
 from textual.widgets import Label, ListItem, ListView
 
 
+def build_song_item(song):
+    return SongItem(
+        title=song.title,
+        artist=song.artist,
+        album=song.album,
+        duration=song.duration,
+    )
+
+
 def build_playlist_item(playlist):
     return PlaylistItem(
         pid=playlist["id"],
@@ -36,6 +45,9 @@ class SpotifyTab(Container):
             self.show_playlists_list()
         if event.button.id == "refresh-button":
             self.refresh_playlists()
+        if event.button.id == "back-button":
+            self.query_one(SongsList).remove()
+            self.show_playlists_list()
 
     def connect_spotify(self):
         self.library.connect()
@@ -55,6 +67,12 @@ class SpotifyTab(Container):
     def action_cursor_up(self) -> None:
         self.query_one(ListView).action_cursor_up()
 
+    def on_list_view_selected(self, event: ListView.Selected) -> None:
+        if event.list_view.id == "playlists-list":
+            self.query_one(PlaylistsList).remove()
+            songs = self.library.get_songs(event.item.pid)
+            self.mount(SongsList(event.item.playlist_name, songs))
+
 
 class PlaylistsList(Container):
     def __init__(self, playlists):
@@ -70,8 +88,8 @@ class PlaylistsList(Container):
                 Button("Refresh", id="refresh-button", variant="primary"),
                 id="refresh-button-container",
             )
-        yield TableHeader(id="library-table-header")
-        yield ListView()
+        yield PlaylistTableHeader(id="library-table-header")
+        yield ListView(id="playlists-list")
 
     def on_mount(self) -> None:
         list_view = self.query_one(ListView)
@@ -79,11 +97,8 @@ class PlaylistsList(Container):
         for playlist in self.playlists:
             list_view.append(build_playlist_item(playlist))
 
-    def on_list_view_selected(self, event: ListView.Selected) -> None:
-        print("playlist_selected", event.item.pid)
 
-
-class TableHeader(Container):
+class PlaylistTableHeader(Container):
     def compose(self) -> ComposeResult:
         with Horizontal():
             yield Label("ID", classes="id")
@@ -103,3 +118,53 @@ class PlaylistItem(ListItem):
             yield Label(self.pid, classes="id")
             yield Label(self.playlist_name, classes="name")
             yield Label(self.total, classes="total")
+
+
+class SongsList(Container):
+    def __init__(self, playlist_name, songs):
+        super().__init__()
+        self.playlist_name = playlist_name
+        self.songs = songs
+
+    def compose(self) -> ComposeResult:
+        with Horizontal(id="songs-header"):
+            yield Container(
+                Button("Back", id="back-button", variant="primary"),
+                id="back-button-container",
+            )
+            yield Container(
+                Label(f"Playlist {self.playlist_name}", id="songs-title")
+            )
+        yield SongTableHeader(id="library-table-header")
+        yield ListView(id="songs-list")
+
+    def on_mount(self) -> None:
+        list_view = self.query_one(ListView)
+
+        for song in self.songs:
+            list_view.append(build_song_item(song))
+
+
+class SongTableHeader(Container):
+    def compose(self) -> ComposeResult:
+        with Horizontal():
+            yield Label("Title", classes="title")
+            yield Label("Artist", classes="artist")
+            yield Label("Album", classes="album")
+            yield Label("Duration", classes="duration")
+
+
+class SongItem(ListItem):
+    def __init__(self, title, artist, album, duration) -> None:
+        super().__init__()
+        self.title = title
+        self.artist = artist
+        self.album = album
+        self.duration = str(duration)
+
+    def compose(self) -> ComposeResult:
+        with Horizontal():
+            yield Label(self.title, classes="title")
+            yield Label(self.artist, classes="artist")
+            yield Label(self.album, classes="album")
+            yield Label(self.duration, classes="duration")

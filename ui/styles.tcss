@@ -56,6 +56,26 @@ SpotifyTab Label {
     padding-right: 1; 
 }
 
+SpotifyTab .title {
+    width: 55%;
+}
+
+SpotifyTab .artist {
+    width: 20%;
+}
+
+SpotifyTab .duration {
+    width: 10%;
+}
+
+SpotifyTab .album {
+    width: 15%;
+}
+
+#songs-header {
+    height: 6;
+}
+
 #playlists-header {
     height: 6;
 }
