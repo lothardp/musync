@@ -1,6 +1,8 @@
 from googleapiclient.discovery import build
 import subprocess
 
+from music.song import Song
+
 
 COMMAND = ["yt-dlp", "-f", "bestaudio", "-x", "--audio-format", "mp3", "--audio-quality",
            "0", "--add-metadata", "--embed-thumbnail", "-o", "%(title)s.%(ext)s"]
@@ -33,3 +35,15 @@ class YoutubeService:
         ])
 
         return res.returncode == 0
+
+    def download_song(self, song: Song):
+        query = f"{song.title} - {song.artist} audio"
+        search_results = self.search(query)
+
+        item = search_results['items'][0]
+        video_id = item['id']['videoId']
+        url = f"https://www.youtube.com/watch?v={video_id}"
+        if self.download_url(url):
+            return True
+
+        return False

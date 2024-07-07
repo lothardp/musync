@@ -4,6 +4,7 @@ from spotify_library.library import SpotifyLibrary
 from ui.app import Musync
 import sys
 import os
+from cli import CLI
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -25,5 +26,9 @@ YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
 youtube_service = YoutubeService(music_path, YOUTUBE_API_KEY)
 
 if __name__ == "__main__":
-    app = Musync(local_library, spotify_library, youtube_service)
-    app.run()
+    if sys.argv[2] == "ui":
+        app = Musync(local_library, spotify_library, youtube_service)
+        app.run()
+    else:
+        CLI(local_library, spotify_library,
+            youtube_service, sys.argv[2]).sync_playlist()
