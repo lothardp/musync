@@ -14,7 +14,7 @@ class SpotifyClient:
             client_id=client_id,
             client_secret=client_secret,
             redirect_uri="http://localhost:3000",
-            scope="user-library-read"
+            scope="user-library-read playlist-read-private"
         )
 
     def connect(self):
@@ -22,13 +22,13 @@ class SpotifyClient:
         self.connected = True
 
     def get_playlists(self):
-        if not self._connected:
+        if not self.connected:
             return None
 
-        return self.client.current_user_playlists()
+        return self.client.current_user_playlists().get("items", [])
 
     def get_playlist(self, playlist_id):
-        if not self._connected:
+        if not self.connected:
             return None
 
         return self.client.playlist(playlist_id)

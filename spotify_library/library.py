@@ -10,6 +10,7 @@ class SpotifyLibrary:
             client_secret=client_secret
         )
         self.playlists_dict = {}
+        self.playlists = None
 
     def connect(self):
         self.client.connect()

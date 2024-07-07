@@ -29,3 +29,37 @@ SongItem Label {
 SongItem .duration {
     text-align: center;
 }
+
+/* Spotify Tab */
+SpotifyTab #connect-button-container {
+    align: center middle;
+}
+
+#connect-button {
+    width: 25%;
+    height: 7;
+}
+
+SpotifyTab .id {
+    width: 25%;
+}
+
+SpotifyTab .name {
+    width: 35%;
+}
+
+SpotifyTab .total {
+    width: 10%;
+}
+
+SpotifyTab Label {
+    padding-right: 1; 
+}
+
+#playlists-header {
+    height: 6;
+}
+
+#playlists-header Container {
+    align: center middle;
+}

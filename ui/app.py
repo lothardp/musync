@@ -1,17 +1,10 @@
 from textual.app import App, ComposeResult
-from textual.widgets import Footer, Label, Markdown, TabbedContent, TabPane
+from textual.widgets import Footer, Label, TabbedContent, TabPane, Tabs
 from textual.binding import Binding
-from textual.widgets import Footer, Label, Tabs, Tab
 from textual.widgets import Static
-from textual.app import App, ComposeResult
-from textual.widgets import Footer, Label, ListItem, ListView
 
 from .library_tab import LibraryTab
-
-
-class SpotifyTab(Static):
-    def compose(self) -> ComposeResult:
-        yield Label("Spotify")
+from .spotify_tab import SpotifyTab
 
 
 class DownloadTab(Static):
@@ -37,11 +30,11 @@ class Musync(App):
         self.spotify_library = spotify_library
 
     def compose(self) -> ComposeResult:
-        with TabbedContent(initial="library"):
+        with TabbedContent(initial="spotify"):
             with TabPane("Library (L)", id="library"):
                 yield LibraryTab(self.local_library)
             with TabPane("Spotify (S)", id="spotify"):
-                yield SpotifyTab()
+                yield SpotifyTab(self.spotify_library)
             with TabPane("Download (D)", id="download"):
                 yield DownloadTab()
 
