@@ -8,6 +8,10 @@ from .spotify_tab import SpotifyTab
 
 
 class DownloadTab(Static):
+    def __init__(self, youtube_service):
+        super().__init__()
+        self.youtube_service = youtube_service
+
     def compose(self) -> ComposeResult:
         yield Label("Download")
 
@@ -24,10 +28,11 @@ class Musync(App):
         ("q", "quit", "Quit"),
     ]
 
-    def __init__(self, local_library, spotify_library):
+    def __init__(self, local_library, spotify_library, youtube_service):
         super().__init__()
         self.local_library = local_library
         self.spotify_library = spotify_library
+        self.youtube_service = youtube_service
 
     def compose(self) -> ComposeResult:
         with TabbedContent(initial="spotify"):
@@ -36,7 +41,7 @@ class Musync(App):
             with TabPane("Spotify (S)", id="spotify"):
                 yield SpotifyTab(self.spotify_library)
             with TabPane("Download (D)", id="download"):
-                yield DownloadTab()
+                yield DownloadTab(self.youtube_service)
 
         yield Footer()
 

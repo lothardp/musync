@@ -1,3 +1,4 @@
+from downloader.youtube import YoutubeService
 from library.library import Library
 from spotify_library.library import SpotifyLibrary
 from ui.app import Musync
@@ -19,6 +20,10 @@ SPOTIFY_CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
 
 spotify_library = SpotifyLibrary(SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET)
 
+YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
+
+youtube_service = YoutubeService(music_path, YOUTUBE_API_KEY)
+
 if __name__ == "__main__":
-    app = Musync(local_library, spotify_library)
+    app = Musync(local_library, spotify_library, youtube_service)
     app.run()
